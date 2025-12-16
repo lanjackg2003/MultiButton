@@ -5,6 +5,10 @@
 
 #include "multi_button.h"
 
+#ifdef __C51__
+#define inline
+#endif
+
 // Macro for callback execution with null check
 #define EVENT_CB(ev)   do { if(handle->cb[ev]) handle->cb[ev](handle); } while(0)
 
@@ -26,7 +30,7 @@ static inline uint8_t button_read_level(Button* handle);
 void button_init(Button* handle, uint8_t(*pin_level)(uint8_t), uint8_t active_level, uint8_t button_id)
 {
 	if (!handle || !pin_level) return;  // parameter validation
-	
+
 	memset(handle, 0, sizeof(Button));
 	handle->event = (uint8_t)BTN_NONE_PRESS;
 	handle->hal_button_level = pin_level;
@@ -243,14 +247,14 @@ static void button_handler(Button* handle)
   */
 int button_start(Button* handle)
 {
-	if (!handle) return -2;  // invalid parameter
-	
 	Button* target = head_handle;
+	if (!handle) return -2;  // invalid parameter
+
 	while (target) {
 		if (target == handle) return -1;  // already exist
 		target = target->next;
 	}
-	
+
 	handle->next = head_handle;
 	head_handle = handle;
 	return 0;
@@ -263,9 +267,9 @@ int button_start(Button* handle)
   */
 void button_stop(Button* handle)
 {
-	if (!handle) return;  // parameter validation
-	
 	Button** curr;
+	if (!handle) return;  // parameter validation
+
 	for (curr = &head_handle; *curr; ) {
 		Button* entry = *curr;
 		if (entry == handle) {

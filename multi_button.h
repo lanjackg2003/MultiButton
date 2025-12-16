@@ -6,8 +6,12 @@
  #ifndef _MULTI_BUTTON_H_
  #define _MULTI_BUTTON_H_
 
- #include <stdint.h>
  #include <string.h>
+ #ifndef USE_ARIES_SDK
+    #include <stdint.h>
+#else
+    #include "aries_sdk.h"
+#endif
 
  // Configuration constants - can be modified according to your needs
  #ifndef TICKS_INTERVAL
